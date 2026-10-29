@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
+  <title>Harbor Hall</title>
+  <rect x="10" y="10" width="44" height="44" rx="4" fill="none" stroke="#005C6E" stroke-width="2.5"/>
+  <path d="M18 46 L32 18 L46 46" fill="none" stroke="#FF5000" stroke-width="2.5"/>
+</svg>

@@ -38,6 +38,8 @@ export function mountPageWidgets() {
       autoplay: true,
       spaceBetween: 0,
       speed: 1000,
+      observer: true,
+      observeParents: true,
       navigation: {
         nextEl: '.ul-banner-2-slider-navigation .next',
         prevEl: '.ul-banner-2-slider-navigation .prev',

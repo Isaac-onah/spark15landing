@@ -10,7 +10,7 @@ import { Header } from './header';
   imports: [RouterOutlet, Header, Footer],
   template: `
     <app-header />
-    <main class="overflow-hidden">
+    <main>
       <router-outlet />
     </main>
     <app-footer />
@@ -18,22 +18,21 @@ import { Header } from './header';
 })
 export class Layout implements AfterViewInit, OnDestroy {
   private readonly header = viewChild(Header);
-  private readonly router: Router;
-  private stopWidgets: () => void = () => undefined;
-  private timer = 0;
   private sub: { unsubscribe: () => void } | null = null;
+  private stopWidgets = () => {};
+  private timer = 0;
 
   constructor(router: Router) {
-    this.router = router;
+    this.sub = router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
+      this.header()?.close();
+      this.scrollToHash((event as NavigationEnd).urlAfterRedirects);
+      this.remount();
+    });
   }
 
   ngAfterViewInit() {
     this.remount();
-    this.sub = this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
-      this.header()?.close();
-      window.scrollTo(0, 0);
-      this.remount();
-    });
+    if (location.hash) this.scrollToHash(location.hash);
   }
 
   ngOnDestroy() {
@@ -48,5 +47,17 @@ export class Layout implements AfterViewInit, OnDestroy {
     this.timer = window.setTimeout(() => {
       this.stopWidgets = mountPageWidgets();
     });
+  }
+
+  private scrollToHash(url: string) {
+    const hash = decodeURIComponent(url.split('#')[1] ?? '');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.setTimeout(() => {
+      if (!hash) {
+        window.scrollTo(0, 0);
+        return;
+      }
+      document.getElementById(hash)?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    }, 60);
   }
 }

@@ -1,140 +1,57 @@
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { posts, site } from '../../data/content';
+import { site } from '../../data/content';
 
 @Component({
   selector: 'app-footer',
   imports: [RouterLink, FormsModule],
   template: `
-    <footer class="ul-footer">
-      <div class="ul-footer-top">
-        <div class="ul-footer-container">
-          <div class="ul-footer-top-contact-infos">
-            <div class="ul-footer-top-contact-info">
-              <div class="ul-footer-top-contact-info-icon">
-                <div class="ul-footer-top-contact-info-icon-inner"><i class="flaticon-pin"></i></div>
-              </div>
-              <div class="ul-footer-top-contact-info-txt">
-                <span class="ul-footer-top-contact-info-label">Address</span>
-                <h5 class="ul-footer-top-contact-info-address">{{ site.address }}</h5>
-              </div>
+    <footer class="foot">
+      <div class="wrap foot-grid">
+        <div>
+          <a class="mark" routerLink="/"><span class="mark-sq"></span>Spark 15</a>
+          <p style="margin-top: 12px">{{ site.footerText }}</p>
+          <p style="margin-top: 12px">{{ site.address }}</p>
+        </div>
+        <div>
+          <h3>Visit</h3>
+          <ul>
+            <li><a routerLink="/" fragment="about">About</a></li>
+            <li><a routerLink="/" fragment="events">Events</a></li>
+            <li><a routerLink="/" fragment="blog">Stories</a></li>
+            <li><a routerLink="/faq">FAQ</a></li>
+            <li><a routerLink="/" fragment="contact">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Write to us</h3>
+          <p><a [href]="'mailto:' + site.email">{{ site.email }}</a></p>
+          <p><a [href]="site.phoneHref">{{ site.phone }}</a></p>
+          <form style="margin-top: 14px" #form (ngSubmit)="onSubmit(form)">
+            <div class="finder">
+              <input type="email" name="email" placeholder="Email address" />
             </div>
-            <div class="ul-footer-top-contact-info">
-              <div class="ul-footer-top-contact-info-icon">
-                <div class="ul-footer-top-contact-info-icon-inner"><i class="flaticon-email"></i></div>
-              </div>
-              <div class="ul-footer-top-contact-info-txt">
-                <span class="ul-footer-top-contact-info-label">Send Email</span>
-                <h5 class="ul-footer-top-contact-info-address">
-                  <a [href]="'mailto:' + site.email">{{ site.email }}</a>
-                </h5>
-              </div>
-            </div>
-            <div class="ul-footer-top-contact-info">
-              <div class="ul-footer-top-contact-info-icon">
-                <div class="ul-footer-top-contact-info-icon-inner"><i class="flaticon-telephone-call-1"></i></div>
-              </div>
-              <div class="ul-footer-top-contact-info-txt">
-                <span class="ul-footer-top-contact-info-label">Call Emergency</span>
-                <h5 class="ul-footer-top-contact-info-address">
-                  <a [href]="site.phoneHref">{{ site.phone }}</a>
-                </h5>
-              </div>
-            </div>
-          </div>
+            <label class="check" style="margin: 10px 0">
+              <input type="checkbox" name="agreement" />
+              <span>I agree to be contacted about this list</span>
+            </label>
+            <button class="btn" type="submit">Join the list</button>
+            @if (note()) {
+              <p class="form-note" [class.ok]="ok()" [class.error]="!ok()">{{ note() }}</p>
+            }
+          </form>
         </div>
       </div>
-
-      <div class="ul-footer-middle">
-        <div class="ul-footer-container">
-          <div class="ul-footer-middle-wrapper">
-            <div class="ul-footer-about">
-              <a routerLink="/"><img src="/assets/img/logo-white.svg" alt="Charitics" class="logo" /></a>
-              <p class="ul-footer-about-txt">{{ site.footerText }}</p>
-              <div class="ul-footer-socials">
-                @for (item of site.socials; track item.icon) {
-                  <a [href]="item.href"><i [class]="item.icon"></i></a>
-                }
-              </div>
-            </div>
-
-            <div class="ul-footer-widget">
-              <h3 class="ul-footer-widget-title">Quick Links</h3>
-              <div class="ul-footer-widget-links">
-                <a routerLink="/about">About Us</a>
-                <a routerLink="/services">Our Services</a>
-                <a routerLink="/blog">Our Blogs</a>
-                <a routerLink="/faq">FAQ’S</a>
-                <a routerLink="/contact">Contact Us</a>
-              </div>
-            </div>
-
-            <div class="ul-footer-widget ul-footer-recent-posts">
-              <h3 class="ul-footer-widget-title">Recent Posts</h3>
-              <div class="ul-blog-sidebar-posts">
-                @for (post of recent; track post.slug) {
-                  <div class="ul-blog-sidebar-post ul-footer-post">
-                    <div class="img"><img [src]="post.image" alt="" /></div>
-                    <div class="txt">
-                      <span class="date">
-                        <span class="icon"><i class="flaticon-calendar"></i></span>
-                        <span>{{ post.date }}</span>
-                      </span>
-                      <h4 class="title"><a [routerLink]="['/blog', post.slug]">{{ post.title }}</a></h4>
-                    </div>
-                  </div>
-                }
-              </div>
-            </div>
-
-            <div class="ul-footer-widget ul-nwsltr-widget">
-              <h3 class="ul-footer-widget-title">Contact Us</h3>
-              <div class="ul-footer-widget-links ul-footer-contact-links">
-                <a [href]="'mailto:' + site.email"><i class="flaticon-mail"></i> {{ site.email }}</a>
-                <a [href]="site.phoneHref"><i class="flaticon-telephone-call"></i> {{ site.phone }}</a>
-              </div>
-              <form class="ul-nwsltr-form" #form (ngSubmit)="onSubmit(form)">
-                <div class="top">
-                  <input type="email" name="email" placeholder="Your Email Address" class="ul-nwsltr-input" />
-                  <button type="submit"><i class="flaticon-next"></i></button>
-                </div>
-                <div class="agreement">
-                  <label class="ul-checkbox-wrapper">
-                    <input type="checkbox" name="agreement" hidden />
-                    <span class="ul-checkbox"><i class="flaticon-tick"></i></span>
-                    <span class="ul-checkbox-txt">I agree to be contacted about this list</span>
-                  </label>
-                </div>
-                @if (note()) {
-                  <p class="form-note" [class.ok]="ok()" [class.error]="!ok()">{{ note() }}</p>
-                }
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="ul-footer-bottom">
-        <div class="ul-footer-container">
-          <div class="ul-footer-bottom-wrapper">
-            <p class="copyright-txt">&copy; {{ year }} Charitics. All rights reserved</p>
-            <div class="ul-footer-bottom-nav">
-              <a routerLink="/faq">FAQs</a>
-              <a routerLink="/contact">Contact</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="ul-footer-vectors">
-        <img src="/assets/img/footer-vector-img.png" alt="" class="ul-footer-vector-1" />
+      <div class="wrap foot-base">
+        <span>© {{ year }} Spark 15</span>
+        <span><a routerLink="/faq">FAQ</a> · <a routerLink="/" fragment="contact">Contact</a></span>
       </div>
     </footer>
   `,
 })
 export class Footer {
   protected readonly site = site;
-  protected readonly recent = posts.slice(0, 2);
   protected readonly year = new Date().getFullYear();
   protected readonly note = signal('');
   protected readonly ok = signal(false);

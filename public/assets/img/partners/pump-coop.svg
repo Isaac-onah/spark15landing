@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
+  <title>Pump Co-op</title>
+  <path d="M28 10 V46" stroke="#005C6E" stroke-width="2.5"/>
+  <circle cx="28" cy="50" r="8" fill="none" stroke="#FF5000" stroke-width="2.5"/>
+  <path d="M28 16 H46 V30" fill="none" stroke="#005C6E" stroke-width="2.5"/>
+</svg>

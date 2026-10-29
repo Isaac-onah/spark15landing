@@ -2,33 +2,10 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
-import {
-  campaigns,
-  events,
-  faqs,
-  members,
-  money,
-  posts,
-  progress,
-  projects,
-  services,
-  site,
-  stats,
-} from '../../data/content';
+import { campaigns, events, faqs, members, money, posts, progress, projects, services, site, stats } from '../../data/content';
 import { EventDetail } from '../events/event-detail';
 import { BlogPost } from '../blog/blog-post';
-import {
-  Article,
-  ContactForm,
-  DonateForm,
-  DonationCard,
-  EventCard,
-  MemberCard,
-  PageBanner,
-  PostCard,
-  ProjectCard,
-  ServiceCard,
-} from '../shared/cards';
+import { Article, ContactForm, DonateForm, DonationCard, EventCard, MemberCard, PageBanner, PostCard, ProjectCard, ServiceCard } from '../shared/cards';
 
 function routeSlug() {
   const route = inject(ActivatedRoute);
@@ -39,14 +16,10 @@ function routeSlug() {
   selector: 'app-not-found',
   imports: [RouterLink],
   template: `
-    <section class="ul-section-spacing">
-      <div class="ul-container not-found">
-        <img src="/assets/img/404-img.png" alt="" />
-        <h2 class="ul-section-title">That page is not on this site</h2>
-        <a routerLink="/" class="ul-btn">
-          <i class="flaticon-fast-forward-double-right-arrows-symbol"></i> Back home
-        </a>
-      </div>
+    <section class="wrap not-found">
+      <h1>That page is not on this site</h1>
+      <p class="lede" style="margin: 12px auto 18px">The link may be old, or the page has not been published.</p>
+      <a routerLink="/" class="btn">Back home</a>
     </section>
   `,
 })
@@ -56,46 +29,24 @@ export class NotFoundPage {}
   selector: 'app-about',
   imports: [RouterLink, PageBanner],
   template: `
-    <app-page-banner title="About Us" />
-    <section class="ul-about ul-section-spacing">
-      <div class="ul-container">
-        <div class="row row-cols-md-2 row-cols-1 align-items-center gy-4">
-          <div class="col">
-            <div class="ul-about-imgs">
-              <div class="img-wrapper"><img src="/assets/img/about-img.png" alt="" /></div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="ul-about-txt">
-              <span class="ul-section-sub-title">About US</span>
-              <h2 class="ul-section-title">{{ site.aboutTitle }}</h2>
-              <p class="ul-section-descr">{{ site.aboutText }}</p>
-              <p class="ul-section-descr">
-                This phase is the public website. Campaigns, stories, events, and team notes live in one content file so they can move into Supabase without a redesign.
-              </p>
-              <a routerLink="/team" class="ul-btn">
-                <i class="flaticon-fast-forward-double-right-arrows-symbol"></i> Meet the team
-              </a>
-            </div>
-          </div>
+    <app-page-banner title="Who we are" />
+    <section class="section">
+      <div class="wrap split">
+        <img src="/assets/img/project-1.jpg" alt="" />
+        <div>
+          <span class="kicker">About</span>
+          <h2>{{ site.aboutTitle }}</h2>
+          <p class="lede" style="margin-top: 14px">{{ site.aboutText }}</p>
+          <p class="lede" style="margin: 12px 0 18px">The same introduction, activities, and news are on the home page.</p>
+          <a routerLink="/team" class="btn teal">Meet the team</a>
         </div>
       </div>
     </section>
-    <div class="ul-stats ul-section-spacing">
-      <div class="ul-container">
-        <div class="ul-stats-wrapper">
-          <div class="row row-cols-md-4 row-cols-2 ul-bs-row">
-            @for (stat of stats; track stat.label) {
-              <div class="col">
-                <div class="ul-stats-item">
-                  <i [class]="stat.icon"></i>
-                  <span class="number">{{ stat.number }}</span>
-                  <span class="txt">{{ stat.label }}</span>
-                </div>
-              </div>
-            }
-          </div>
-        </div>
+    <div class="wrap" style="padding-bottom: 72px">
+      <div class="facts">
+        @for (stat of stats; track stat.label) {
+          <div><strong>{{ stat.number }}</strong><span>{{ stat.label }}</span></div>
+        }
       </div>
     </div>
   `,
@@ -110,13 +61,11 @@ export class AboutPage {
   imports: [PageBanner, ServiceCard],
   template: `
     <app-page-banner title="Services" />
-    <section class="ul-section-spacing">
-      <div class="ul-container">
-        <div class="row row-cols-lg-4 row-cols-md-2 row-cols-1 gy-4">
-          @for (item of services; track item.slug) {
-            <div class="col"><app-service-card [item]="item" /></div>
-          }
-        </div>
+    <section class="section">
+      <div class="wrap grid-2">
+        @for (item of services; track item.slug) {
+          <app-service-card [item]="item" />
+        }
       </div>
     </section>
   `,
@@ -133,7 +82,7 @@ export class ServicesPage {
       <app-page-banner [title]="item.title" current="Service" />
       <app-article [image]="item.image" [title]="item.title">
         @for (paragraph of item.body; track paragraph) {
-          <p class="ul-section-descr">{{ paragraph }}</p>
+          <p>{{ paragraph }}</p>
         }
       </app-article>
     } @else {
@@ -151,15 +100,11 @@ export class ServiceDetailPage {
   imports: [PageBanner, ProjectCard],
   template: `
     <app-page-banner title="Projects" />
-    <section class="ul-projects ul-section-spacing">
-      <div class="ul-container">
-        <div class="row ul-bs-row justify-content-center">
-          @for (item of projects; track item.slug) {
-            <div [class]="item.wide ? 'col-lg-8 col-md-6 col-12' : 'col-lg-4 col-md-6 col-12'">
-              <app-project-card [item]="item" />
-            </div>
-          }
-        </div>
+    <section class="section">
+      <div class="wrap grid-2">
+        @for (item of projects; track item.slug) {
+          <app-project-card [item]="item" />
+        }
       </div>
     </section>
   `,
@@ -175,9 +120,9 @@ export class ProjectsPage {
     @if (item(); as item) {
       <app-page-banner [title]="item.title" current="Project" />
       <app-article [image]="item.image" [title]="item.title">
-        <p class="ul-section-descr">{{ item.category }}</p>
+        <p class="tag">{{ item.category }}</p>
         @for (paragraph of item.body; track paragraph) {
-          <p class="ul-section-descr">{{ paragraph }}</p>
+          <p>{{ paragraph }}</p>
         }
       </app-article>
     } @else {
@@ -194,14 +139,12 @@ export class ProjectDetailPage {
   selector: 'app-donations',
   imports: [PageBanner, DonationCard],
   template: `
-    <app-page-banner title="Donations" />
-    <section class="ul-section-spacing">
-      <div class="ul-container">
-        <div class="row row-cols-lg-3 row-cols-md-2 row-cols-1 gy-4">
-          @for (item of campaigns; track item.slug) {
-            <div class="col"><app-donation-card [item]="item" /></div>
-          }
-        </div>
+    <app-page-banner title="Donate" />
+    <section class="section">
+      <div class="wrap grid-2">
+        @for (item of campaigns; track item.slug) {
+          <app-donation-card [item]="item" />
+        }
       </div>
     </section>
   `,
@@ -215,35 +158,27 @@ export class DonationsPage {
   imports: [PageBanner, DonateForm, NotFoundPage],
   template: `
     @if (item(); as item) {
-      <app-page-banner [title]="item.title" current="Donation" />
-      <section class="ul-section-spacing">
-        <div class="ul-container">
-          <div class="row gy-4 align-items-start">
-            <div class="col-lg-7">
-              <img [src]="item.image" alt="" class="detail-photo detail-photo--flat" />
-              <div class="ul-donation-progress progress-gap">
-                <div class="donation-progress-container ul-progress-container">
-                  <div class="donation-progressbar ul-progressbar" [attr.data-ul-progress-value]="pct()">
-                    <div class="donation-progress-label ul-progress-label"></div>
-                  </div>
-                </div>
-                <div class="ul-donation-progress-labels">
-                  <span class="ul-donation-progress-label">Raised : {{ money(item.raised) }}</span>
-                  <span class="ul-donation-progress-label">Goal : {{ money(item.goal) }}</span>
-                </div>
+      <app-page-banner [title]="item.title" current="Donate" />
+      <section class="section">
+        <div class="wrap split">
+          <article class="prose">
+            <img class="cover" [src]="item.image" alt="" style="border-radius: 4px" />
+            @if (item.goal) {
+              <div class="meter"><span [style.width.%]="pct()"></span></div>
+              <div class="meta">
+                <span>Raised {{ money(item.raised) }}</span>
+                <span>Goal {{ money(item.goal) }}</span>
               </div>
-              @for (paragraph of item.body; track paragraph) {
-                <p class="ul-section-descr">{{ paragraph }}</p>
-              }
-            </div>
-            <div class="col-lg-5">
-              <div class="ul-donate-form-wrapper">
-                <h3 class="ul-donate-form-title">Choose an amount</h3>
-                <p class="ul-section-descr">{{ item.excerpt }}</p>
-                <app-donate-form [campaign]="item.title" />
-              </div>
-            </div>
-          </div>
+            }
+            @for (paragraph of item.body; track paragraph) {
+              <p>{{ paragraph }}</p>
+            }
+          </article>
+          <aside class="panel">
+            <h2 style="font-size: 32px; margin-bottom: 8px">Give by bank transfer</h2>
+            <p class="lede" style="margin-bottom: 16px">{{ item.excerpt }}</p>
+            <app-donate-form [campaign]="item.title" />
+          </aside>
         </div>
       </section>
     } @else {
@@ -266,15 +201,11 @@ export class DonationDetailPage {
   imports: [PageBanner, EventCard],
   template: `
     <app-page-banner title="Events" />
-    <section class="ul-events ul-section-spacing">
-      <div class="ul-container">
-        <div class="ul-events-wrapper">
-          <div class="row ul-bs-row row-cols-lg-2 row-cols-1">
-            @for (item of events; track item.slug) {
-              <div class="col"><app-event-card [item]="item" /></div>
-            }
-          </div>
-        </div>
+    <section class="section">
+      <div class="wrap">
+        @for (item of events; track item.slug) {
+          <app-event-card [item]="item" />
+        }
       </div>
     </section>
   `,
@@ -288,7 +219,7 @@ export class EventsPage {
   imports: [PageBanner, EventDetail, NotFoundPage],
   template: `
     @if (item(); as item) {
-      <app-page-banner title="Event Details" current="Event Details" />
+      <app-page-banner title="Event" current="Event" />
       <app-event-detail [event]="item" />
     } @else {
       <app-not-found />
@@ -304,14 +235,12 @@ export class EventDetailPage {
   selector: 'app-team',
   imports: [PageBanner, MemberCard],
   template: `
-    <app-page-banner title="Our Team" />
-    <section class="ul-team ul-section-spacing">
-      <div class="ul-container">
-        <div class="row row-cols-md-4 row-cols-sm-2 row-cols-1 ul-team-row">
-          @for (item of members; track item.slug) {
-            <div class="col"><app-member-card [item]="item" /></div>
-          }
-        </div>
+    <app-page-banner title="Team" />
+    <section class="section">
+      <div class="wrap grid-4">
+        @for (item of members; track item.slug) {
+          <app-member-card [item]="item" />
+        }
       </div>
     </section>
   `,
@@ -327,9 +256,9 @@ export class TeamPage {
     @if (item(); as item) {
       <app-page-banner [title]="item.name" current="Team" />
       <app-article [image]="item.image" [title]="item.name">
-        <p class="ul-section-descr">{{ item.role }}</p>
+        <p class="tag">{{ item.role }}</p>
         @for (paragraph of item.bio; track paragraph) {
-          <p class="ul-section-descr">{{ paragraph }}</p>
+          <p>{{ paragraph }}</p>
         }
       </app-article>
     } @else {
@@ -347,15 +276,11 @@ export class TeamDetailPage {
   imports: [PageBanner, PostCard],
   template: `
     <app-page-banner title="Stories" />
-    <section class="ul-blogs-2 ul-section-spacing">
-      <div class="ul-container">
-        <div class="row row-cols-md-3 row-cols-1 ul-bs-row">
-          @for (item of posts; track item.slug) {
-            <div class="col">
-              <div class="ul-blog ul-blog-2"><app-post-card [item]="item" /></div>
-            </div>
-          }
-        </div>
+    <section class="section">
+      <div class="wrap grid-3">
+        @for (item of posts; track item.slug) {
+          <app-post-card [item]="item" />
+        }
       </div>
     </section>
   `,
@@ -369,7 +294,7 @@ export class BlogPage {
   imports: [PageBanner, BlogPost, NotFoundPage],
   template: `
     @if (item(); as item) {
-      <app-page-banner title="Blog Details" current="Blog Details" />
+      <app-page-banner title="Story" current="Story" />
       <app-blog-post [post]="item" />
     } @else {
       <app-not-found />
@@ -385,24 +310,20 @@ export class BlogDetailPage {
   selector: 'app-faq',
   imports: [PageBanner],
   template: `
-    <app-page-banner title="FAQs" />
-    <section class="ul-section-spacing">
-      <div class="ul-container">
-        <div class="ul-accordion">
-          @for (item of faqs; track item.question; let index = $index) {
-            <div class="ul-single-accordion-item" [class.open]="open() === index">
-              <button type="button" class="ul-single-accordion-item__header accordion-trigger" (click)="toggle(index)">
-                <div class="left">
-                  <h3 class="ul-single-accordion-item__title">{{ item.question }}</h3>
-                </div>
-                <span class="icon"><i class="flaticon-next"></i></span>
-              </button>
-              <div class="ul-single-accordion-item__body">
-                <p>{{ item.answer }}</p>
-              </div>
-            </div>
-          }
-        </div>
+    <app-page-banner title="Questions" />
+    <section class="section">
+      <div class="wrap faq">
+        @for (item of faqs; track item.question; let index = $index) {
+          <div [class.open]="open() === index">
+            <button type="button" (click)="toggle(index)">
+              <h3>{{ item.question }}</h3>
+              <span>{{ open() === index ? '–' : '+' }}</span>
+            </button>
+            @if (open() === index) {
+              <p>{{ item.answer }}</p>
+            }
+          </div>
+        }
       </div>
     </section>
   `,
@@ -420,25 +341,20 @@ export class FaqPage {
   selector: 'app-contact',
   imports: [PageBanner, ContactForm],
   template: `
-    <app-page-banner title="Contact us" />
-    <section class="ul-contact ul-section-spacing">
-      <div class="ul-container">
-        <div class="row g-0">
-          <div class="col-lg-5">
-            <div class="ul-contact-img"><img src="/assets/img/contact-img.jpg" alt="" /></div>
-          </div>
-          <div class="col-lg-7">
-            <div class="ul-contact-form-wrapper">
-              <span class="ul-section-sub-title">Contact us</span>
-              <h2 class="ul-section-title">Send Us a Message</h2>
-              <app-contact-form />
-            </div>
+    <app-page-banner title="Contact" />
+    <section class="section">
+      <div class="wrap split">
+        <div>
+          <span class="kicker">Write or call</span>
+          <h2>Send a message about a gift or a visit</h2>
+          <div class="stack">
+            <div>{{ site.address }}</div>
+            <div><a [href]="'mailto:' + site.email">{{ site.email }}</a></div>
+            <div><a [href]="site.phoneHref">{{ site.phone }}</a></div>
           </div>
         </div>
-        <div class="ul-footer-top-contact-infos contact-extra">
-          <p>{{ site.address }}</p>
-          <p><a [href]="'mailto:' + site.email">{{ site.email }}</a></p>
-          <p><a [href]="site.phoneHref">{{ site.phone }}</a></p>
+        <div class="panel">
+          <app-contact-form />
         </div>
       </div>
     </section>
